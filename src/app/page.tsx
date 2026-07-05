@@ -5,6 +5,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { FadeIn } from "@/components/FadeIn";
 import { Logo } from "@/components/Logo";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 

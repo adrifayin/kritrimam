@@ -21,13 +21,26 @@ export default function Home() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <div className="flex flex-col w-full bg-ink">
-      {/* Hero Section (Asymmetric 12-col layout with Parallax) */}
-      <section ref={heroRef} className="relative pt-48 pb-32 overflow-hidden">
-        <motion.div 
-          style={{ opacity: opacityHero }}
-          className="max-w-[1280px] mx-auto px-6 md:px-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10"
-        >
+    <div className="flex flex-col w-full bg-ink relative">
+      
+      {/* Fixed Fluid Silk Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-70">
+        <Image
+          src="/bg-silk.png"
+          alt="Fluid Silk Background"
+          fill
+          className="object-cover mix-blend-screen"
+        />
+        <div className="absolute inset-0 bg-ink/50 backdrop-blur-[10px]" />
+      </div>
+
+      <div className="relative z-10 w-full">
+        {/* Hero Section (Asymmetric 12-col layout with Parallax) */}
+        <section ref={heroRef} className="relative pt-48 pb-32 overflow-hidden">
+          <motion.div 
+            style={{ opacity: opacityHero }}
+            className="max-w-[1280px] mx-auto px-6 md:px-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10"
+          >
           
           {/* Left Column (7/12) */}
           <motion.div style={{ y: yText }} className="lg:col-span-7 flex flex-col items-start pt-12">
@@ -49,7 +62,7 @@ export default function Home() {
               </p>
             </FadeIn>
             
-            <FadeIn delay={0.3} className="w-full max-w-md">
+            <FadeIn delay={0.3} className="w-full max-w-md bg-white/5 backdrop-blur-xl p-8 border border-white/10 rounded-3xl shadow-2xl">
               <WaitlistForm />
             </FadeIn>
           </motion.div>
@@ -68,21 +81,21 @@ export default function Home() {
                 ease: "easeInOut"
               }}
             >
-              <div className="absolute inset-0 -translate-x-1/2">
-                <Logo variant="ghost" className="w-full h-full" />
+              <div className="absolute inset-0 -translate-x-1/2 mix-blend-plus-lighter">
+                <Logo variant="ghost" className="w-full h-full text-white opacity-20" />
               </div>
             </motion.div>
           </motion.div>
         </motion.div>
         
         {/* Mobile Ghost Anchor */}
-        <div className="absolute top-0 right-[-20%] w-[300px] h-[300px] lg:hidden pointer-events-none opacity-50 z-0">
-          <Logo variant="ghost" className="w-full h-full" />
+        <div className="absolute top-0 right-[-20%] w-[300px] h-[300px] lg:hidden pointer-events-none opacity-30 z-0 mix-blend-plus-lighter">
+          <Logo variant="ghost" className="w-full h-full text-white" />
         </div>
       </section>
 
       {/* Stacked Declarative Statements (Vertus Style) */}
-      <section className="bg-ink flex flex-col border-t border-white/5 relative z-20">
+      <section className="bg-ink/50 backdrop-blur-xl flex flex-col border-t border-white/5 relative z-20">
         <StackedReveal>
           <div className="flex gap-8 items-start">
             <span className="text-laterite font-mono text-xl mt-2">01</span>
@@ -121,7 +134,7 @@ export default function Home() {
       </section>
 
       {/* NEST.ai Teaser Band */}
-      <section className="py-24 md:py-32 bg-ink-soft border-y border-white/5">
+      <section className="py-24 md:py-32 bg-white/5 backdrop-blur-2xl border-y border-white/5 relative z-20">
         <div className="max-w-[1280px] mx-auto px-6 md:px-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-8 flex flex-col gap-6">
             <FadeIn>
@@ -151,7 +164,7 @@ export default function Home() {
       </section>
 
       {/* Why This Matters (Research Impact) */}
-      <section className="py-32 md:py-40 bg-ink">
+      <section className="py-32 md:py-40 bg-ink/20 backdrop-blur-sm relative z-20">
         <div className="max-w-[1280px] mx-auto px-6 md:px-20 grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           <div className="lg:col-span-7">
             <FadeIn>
@@ -184,7 +197,7 @@ export default function Home() {
       </section>
 
       {/* Founder Note */}
-      <section className="py-32 md:py-40 bg-ink border-t border-white/5">
+      <section className="py-32 md:py-40 bg-ink/50 backdrop-blur-3xl border-t border-white/5 relative z-20">
         <div className="max-w-[1280px] mx-auto px-6 md:px-20 text-center flex flex-col items-center">
           <FadeIn className="max-w-3xl">
             <div className="w-12 h-12 rounded-full border border-laterite flex items-center justify-center font-display text-laterite text-lg mx-auto mb-10">
@@ -201,12 +214,14 @@ export default function Home() {
       </section>
 
       {/* Closing Waitlist */}
-      <section className="py-32 md:py-40 bg-ink-soft border-t border-white/5 flex flex-col items-center text-center">
+      <section className="py-32 md:py-40 bg-white/5 backdrop-blur-2xl border-t border-white/5 flex flex-col items-center text-center relative z-20">
         <FadeIn className="max-w-2xl w-full px-6">
-          <h2 className="font-display text-3xl md:text-5xl text-parchment tracking-tight mb-12">
+          <h2 className="font-display text-3xl md:text-5xl text-parchment tracking-tight mb-12 drop-shadow-md">
             Be the first to know when we launch.
           </h2>
-          <WaitlistForm showOptions={false} />
+          <div className="bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl">
+            <WaitlistForm showOptions={false} />
+          </div>
           
           <div className="mt-16">
             <Link href="/work-with-us" className="text-parchment-dim hover:text-laterite transition-colors text-sm tracking-widest uppercase border-b border-transparent hover:border-laterite pb-1">
@@ -215,6 +230,7 @@ export default function Home() {
           </div>
         </FadeIn>
       </section>
+      </div>
     </div>
   );
 }

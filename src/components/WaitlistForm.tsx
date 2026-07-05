@@ -56,7 +56,7 @@ export function WaitlistForm({ showOptions = false }: WaitlistFormProps) {
                 <select 
                   value={interest}
                   onChange={(e) => setInterest(e.target.value)}
-                  className="w-full bg-ink border border-white/10 text-parchment p-4 focus:outline-none focus:border-laterite/50 transition-colors appearance-none rounded-none"
+                  className="w-full bg-white/5 border border-white/10 backdrop-blur-md text-parchment p-4 focus:outline-none focus:border-laterite/50 transition-colors appearance-none rounded-full"
                 >
                   <option value="research">Research collaboration</option>
                   <option value="freelance">Freelance AI engineering</option>
@@ -73,7 +73,7 @@ export function WaitlistForm({ showOptions = false }: WaitlistFormProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full bg-ink border border-white/10 text-parchment p-4 focus:outline-none focus:border-laterite/50 transition-colors placeholder:text-parchment-dim/50 rounded-none"
+                className="w-full bg-white/5 border border-white/10 backdrop-blur-md text-parchment p-4 focus:outline-none focus:border-laterite/50 transition-colors placeholder:text-parchment-dim/50 rounded-full"
               />
             </div>
             

@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 interface LogoProps {
-  variant?: 'lockup' | 'monogram' | 'ghost';
+  variant?: 'lockup' | 'monogram' | 'ghost' | 'nav';
   theme?: 'dark' | 'light';
   className?: string;
 }
@@ -60,6 +60,22 @@ export function Logo({ variant = 'lockup', theme = 'dark', className = '' }: Log
     return (
       <div className={twMerge("inline-flex w-10 h-10", className)}>
         <MarkSvg />
+      </div>
+    );
+  }
+
+  if (variant === 'nav') {
+    return (
+      <div className={twMerge("inline-flex items-center gap-3", className)}>
+        <div className="w-8 h-8">
+          <MarkSvg />
+        </div>
+        <span
+          className="font-display font-black tracking-widest text-lg md:text-xl uppercase translate-y-[1px] select-none"
+          style={{ color: textColor, transform: 'scaleY(1.15)', letterSpacing: '0.05em' }}
+        >
+          KRITRIMAM
+        </span>
       </div>
     );
   }

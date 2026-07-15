@@ -1,15 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 export default function Template({ children }: { children: ReactNode }) {
+  const reducedMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(4px)" }}
-      animate={{ opacity: 1, filter: "blur(0px)" }}
-      exit={{ opacity: 0, filter: "blur(4px)" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: reducedMotion ? 0 : -10 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-col w-full min-h-screen"
     >
       {children}

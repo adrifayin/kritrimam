@@ -1,34 +1,34 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Noto_Sans_Malayalam } from "next/font/google";
+import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { CustomCursor } from "@/components/CustomCursor";
 
-const inter = Inter({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500"],
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-ibm-plex-sans",
   display: "swap",
 });
 
-const notoMalayalam = Noto_Sans_Malayalam({
-  weight: ["400", "700"],
-  subsets: ["malayalam"],
-  variable: "--font-noto-malayalam",
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Kritrimam — Foundational AI Research Lab",
+  title: "Kritrimam — An Independent AI Research Lab",
   description:
-    "A foundational AI research lab building toward general-purpose reasoning systems, starting with NEST.ai.",
+    "Kritrimam means artificial. We're here to make it deliberate. An independent AI research lab building from Kerala.",
 };
 
 export default function RootLayout({
@@ -39,10 +39,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${notoMalayalam.variable} antialiased`}
+      className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col font-sans bg-ink text-parchment cursor-none">
-        <CustomCursor />
+      <body className="min-h-screen flex flex-col font-sans bg-ink text-paper">
         <SmoothScroll>
           <Navigation />
           <main className="flex-1 w-full relative z-10">{children}</main>

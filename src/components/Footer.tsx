@@ -1,51 +1,65 @@
-import Link from "next/link";
-import { Logo } from "./Logo";
-import { FadeIn } from "./FadeIn";
+import { RevealOnScroll } from "./RevealOnScroll";
 
 const contactLinks = [
-  { label: "Email", text: "adhilrifayinks@gmail.com", href: "mailto:adhilrifayinks@gmail.com", mono: false },
-  { label: "Instagram", text: "@adrifayin", href: "https://instagram.com/adrifayin", mono: false },
-  { label: "WhatsApp", text: "+91 7736667318", href: "https://wa.me/917736667318", mono: true },
-  { label: "Phone", text: "+91 7736667318", href: "tel:+917736667318", mono: true },
-  { label: "GitHub", text: "github.com/adrifayin", href: "https://github.com/adrifayin", mono: false },
-  { label: "LinkedIn", text: "linkedin.com/in/adhilrifayinks", href: "https://linkedin.com/in/adhilrifayinks", mono: false },
+  {
+    label: "Instagram",
+    text: "@adrifayin",
+    href: "https://instagram.com/adrifayin",
+  },
+  {
+    label: "Email",
+    text: "adhilrifayinks@gmail.com",
+    href: "mailto:adhilrifayinks@gmail.com",
+  },
+  {
+    label: "WhatsApp",
+    text: "+91 77366 67318",
+    href: "https://wa.me/917736667318",
+  },
+  {
+    label: "LinkedIn",
+    text: "linkedin.com/in/adhilrifayinks",
+    href: "https://linkedin.com/in/adhilrifayinks",
+  },
 ];
 
 export function Footer() {
   return (
-    <footer id="contact" className="bg-ink-soft pt-24 pb-12 border-t border-white/5">
+    <footer id="contact" className="border-t border-ash/10 pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <FadeIn>
-          <h2 className="font-display text-2xl md:text-3xl text-parchment tracking-tight mb-16">
-            Connect
-          </h2>
-        </FadeIn>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8 mb-24">
+        <RevealOnScroll>
+          <p className="font-mono text-xs tracking-[0.08em] uppercase text-ash mb-12">
+            Contact
+          </p>
+        </RevealOnScroll>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-8 mb-24">
           {contactLinks.map((link, i) => (
-            <FadeIn key={link.label} delay={i * 0.1}>
+            <RevealOnScroll key={link.label} delay={i * 0.08}>
               <div className="flex flex-col gap-2">
-                <span className="text-xs uppercase tracking-widest text-parchment-dim">
+                <span className="font-mono text-xs tracking-[0.08em] uppercase text-ash/60">
                   {link.label}
                 </span>
                 <a
                   href={link.href}
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel="noopener noreferrer"
-                  className={`text-lg text-parchment hover:text-laterite-bright transition-colors relative group w-fit ${link.mono ? 'font-mono text-base tracking-wider' : ''}`}
+                  className="text-paper/80 hover:text-paper transition-colors relative group w-fit focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite"
                 >
                   {link.text}
-                  <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-laterite transition-transform origin-left scale-x-0 group-hover:scale-x-100" />
+                  <span className="absolute -bottom-0.5 left-0 w-full h-px bg-laterite transition-transform origin-left scale-x-0 group-hover:scale-x-100" />
                 </a>
               </div>
-            </FadeIn>
+            </RevealOnScroll>
           ))}
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-8 border-t border-white/5">
-          <Logo variant="monogram" className="w-8 h-8 opacity-50" />
-          <p className="text-sm text-parchment-dim tracking-wide">
-            © {new Date().getFullYear()} Kritrimam. Built in Kerala, India.
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-ash/10">
+          <span className="font-display text-sm text-paper/40">
+            Kritrimam
+          </span>
+          <p className="font-mono text-xs text-ash/40 tracking-wide">
+            © {new Date().getFullYear()} Kritrimam. Kerala, India.
           </p>
         </div>
       </div>

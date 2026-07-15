@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #14110F;
-  --color-ink-soft: #1D1913;
-  --color-laterite: #A8481F;
-  --color-laterite-bright: #C85A2B;
-  --color-parchment: #F3ECE1;
-  --color-parchment-dim: #BDB3A2;
-  --color-verdigris: #2F5C56;
-  --color-gold: #C9A227;
+  /* Laterite & Ink palette */
+  --color-ink: #0E0B09;
+  --color-ink-soft: #1A1613;
+  --color-laterite: #A6402A;
+  --color-laterite-deep: #6E2A1C;
+  --color-paper: #F3EAE0;
+  --color-ash: #8C8178;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-malayalam: var(--font-noto-malayalam), ui-sans-serif, system-ui, sans-serif;
+  /* Typography */
+  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
 }
 
 @layer base {
@@ -21,12 +21,22 @@
   }
   body {
     background-color: var(--color-ink);
-    color: var(--color-parchment);
+    color: var(--color-paper);
     font-family: var(--font-sans);
   }
 }
 
 ::selection {
   background-color: var(--color-laterite);
-  color: var(--color-parchment);
+  color: var(--color-paper);
+}
+
+/* Reduced motion: disable transforms, keep opacity fades */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

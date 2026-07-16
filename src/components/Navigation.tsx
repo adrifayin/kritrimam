@@ -1,23 +1,25 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
 
 const navLinks = [
-  { name: "NEST.AI", path: "/nest-ai" },
-  { name: "VISION", path: "/vision" },
-  { name: "ENTERPRISE", path: "/enterprise" },
-  { name: "CONTACT", path: "#contact" },
+  { name: "NEST.AI", target: "#nest-ai" },
+  { name: "BUDHI", target: "#budhi" },
+  { name: "VISION", target: "#vision" },
+  { name: "CONTACT", target: "#contact" },
 ];
+
+const SECTION_IDS = ["nest-ai", "budhi", "vision", "contact"];
 
 export function Navigation() {
   const [visible, setVisible] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const lastScrollY = useRef(0);
-  const pathname = usePathname();
+  const lenis = useLenis();
 
   // Fade in after 500ms delay on mount (hero gets the first beat)
   useEffect(() => {
@@ -40,8 +42,8 @@ export function Navigation() {
       if (Math.abs(currentY - lastScrollY.current) < threshold) return;
 
       if (currentY > lastScrollY.current && currentY > 100) {
-        // Scrolling down — hide
-        setVisible(false);
+        // Scrolling down — hide (but not if mobile menu is open)
+        if (!mobileOpen) setVisible(false);
       } else {
         // Scrolling up — show
         setVisible(true);
@@ -52,21 +54,83 @@ export function Navigation() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mobileOpen]);
 
-  // Close mobile menu on route change
+  // Active section tracking via single IntersectionObserver
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+    const observers: IntersectionObserver[] = [];
+    const visibleSections = new Map<string, number>();
 
-  const handleContactClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const el = document.getElementById("contact");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-    setMobileOpen(false);
+    SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              visibleSections.set(id, entry.intersectionRatio);
+            } else {
+              visibleSections.delete(id);
+            }
+          });
+
+          // Pick the section with the highest intersection ratio
+          let maxRatio = 0;
+          let maxId: string | null = null;
+          visibleSections.forEach((ratio, sectionId) => {
+            if (ratio > maxRatio) {
+              maxRatio = ratio;
+              maxId = sectionId;
+            }
+          });
+          setActiveSection(maxId);
+        },
+        {
+          threshold: [0, 0.1, 0.2, 0.3, 0.5],
+          rootMargin: "-80px 0px -40% 0px",
+        }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
+
+  // Lenis smooth-scroll to anchor
+  const scrollTo = useCallback(
+    (target: string) => {
+      if (lenis) {
+        lenis.scrollTo(target, {
+          duration: 1.2,
+          easing: (t: number) => 1 - Math.pow(1 - t, 3),
+        });
+      } else {
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+      setMobileOpen(false);
+    },
+    [lenis]
+  );
+
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+      e.preventDefault();
+      scrollTo(target);
+    },
+    [scrollTo]
+  );
+
+  const handleLogoClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      scrollTo("#hero");
+    },
+    [scrollTo]
+  );
 
   return (
     <>
@@ -86,43 +150,42 @@ export function Navigation() {
             ? "backdrop-blur-[12px] bg-ink/30"
             : "bg-transparent"
         }`}
+        style={{ pointerEvents: visible ? "auto" : "none" }}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
           {/* Wordmark */}
-          <Link
-            href="/"
-            className="font-display text-lg text-paper tracking-wide hover:opacity-70 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite"
+          <a
+            href="#hero"
+            onClick={handleLogoClick}
+            className="text-base font-bold tracking-[0.04em] text-paper hover:opacity-70 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite"
+            style={{ fontFamily: "var(--font-wordmark)" }}
           >
-            Kritrimam
-          </Link>
+            kritrimam
+          </a>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
-              const isActive = pathname === link.path;
-              const isContact = link.path === "#contact";
+              const sectionId = link.target.replace("#", "");
+              const isActive = activeSection === sectionId;
 
-              return isContact ? (
+              return (
                 <a
                   key={link.name}
-                  href="#contact"
-                  onClick={handleContactClick}
-                  className={`font-mono text-xs tracking-[0.08em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite ${
+                  href={link.target}
+                  onClick={(e) => handleNavClick(e, link.target)}
+                  className={`relative font-mono text-xs tracking-[0.08em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite ${
                     isActive ? "text-paper" : "text-ash hover:text-paper"
                   }`}
                 >
                   {link.name}
+                  {/* Active indicator — small laterite underline */}
+                  <span
+                    className={`absolute -bottom-1 left-0 w-full h-px bg-laterite transition-opacity duration-300 ${
+                      isActive ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
                 </a>
-              ) : (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className={`font-mono text-xs tracking-[0.08em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-laterite ${
-                    isActive ? "text-paper" : "text-ash hover:text-paper"
-                  }`}
-                >
-                  {link.name}
-                </Link>
               );
             })}
           </div>
@@ -159,36 +222,19 @@ export function Navigation() {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 bg-ink/95 backdrop-blur-md md:hidden flex flex-col items-center justify-center gap-8"
           >
-            {navLinks.map((link, i) => {
-              const isContact = link.path === "#contact";
-              return isContact ? (
-                <motion.a
-                  key={link.name}
-                  href="#contact"
-                  onClick={handleContactClick}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-mono text-sm tracking-[0.08em] uppercase text-ash hover:text-paper transition-colors"
-                >
-                  {link.name}
-                </motion.a>
-              ) : (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <Link
-                    href={link.path}
-                    className="font-mono text-sm tracking-[0.08em] uppercase text-ash hover:text-paper transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              );
-            })}
+            {navLinks.map((link, i) => (
+              <motion.a
+                key={link.name}
+                href={link.target}
+                onClick={(e) => handleNavClick(e, link.target)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="font-mono text-sm tracking-[0.08em] uppercase text-ash hover:text-paper transition-colors"
+              >
+                {link.name}
+              </motion.a>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>

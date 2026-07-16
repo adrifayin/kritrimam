@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono, Syne } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { MouseGlow } from "@/components/MouseGlow";
+import { FloatingParticles } from "@/components/FloatingParticles";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -25,6 +27,12 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Kritrimam — An Independent AI Research Lab",
   description:
@@ -39,13 +47,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} antialiased`}
+      className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} ${syne.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col font-sans bg-ink text-paper">
+        {/* Ambient visual layers */}
+        <div className="grain-overlay" aria-hidden="true" />
+        <MouseGlow />
+        <FloatingParticles />
         <SmoothScroll>
+          <ScrollProgress />
           <Navigation />
           <main className="flex-1 w-full relative z-10">{children}</main>
-          <Footer />
         </SmoothScroll>
       </body>
     </html>

@@ -1,29 +1,26 @@
-import type { Metadata } from "next";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedDivider } from "@/components/AnimatedDivider";
 
-export const metadata: Metadata = {
-  title: "Vision — Kritrimam",
-  description:
-    "Kritrimam isn't set up to ship one product and call it a company. The point is the lab underneath it.",
-};
-
-export default function VisionPage() {
+export function VisionSection() {
   return (
-    <div className="min-h-screen pt-32 md:pt-40 pb-24">
-      <div className="max-w-3xl mx-auto px-6 md:px-12">
-        {/* H1 */}
+    <section id="vision" className="relative pt-32 md:pt-40 pb-32 md:pb-48">
+      {/* Animated divider */}
+      <AnimatedDivider />
+
+      <div className="max-w-3xl mx-auto px-6 md:px-12 pt-24 md:pt-32">
+        {/* H2 */}
         <RevealOnScroll>
-          <h1 className="font-display font-bold text-5xl md:text-6xl text-paper mb-16">
+          <h2 className="font-display font-bold text-5xl md:text-6xl text-paper mb-16">
             Vision
-          </h1>
+          </h2>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.05}>
           <p className="text-paper/80 text-lg leading-relaxed mb-12">
             Kritrimam isn&apos;t set up to ship one product and call it a
-            company. NEST.ai is the first thing we&apos;ve built with what we
-            know — it&apos;s proof of work, not the whole point. The point is
-            the lab underneath it.
+            company. NEST.ai and Budhi are what we&apos;ve built with what we
+            know so far — proof of work, not the whole point. The point is the
+            lab underneath both of them.
           </p>
         </RevealOnScroll>
 
@@ -39,9 +36,16 @@ export default function VisionPage() {
           </p>
         </RevealOnScroll>
 
-        {/* Pull-quote — one Fraunces moment for typographic rhythm */}
+        {/* Pull-quote — enhanced with gradient accent */}
         <RevealOnScroll>
-          <blockquote className="my-16 md:my-20 border-l-2 border-laterite pl-8">
+          <blockquote className="relative my-16 md:my-20 pl-8">
+            {/* Gradient accent line */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-[2px]"
+              style={{
+                background: "linear-gradient(to bottom, var(--color-laterite), var(--color-laterite-deep), transparent)",
+              }}
+            />
             <p className="font-display text-3xl md:text-4xl text-paper leading-snug">
               Not more data, clearer footing under it.
             </p>
@@ -60,6 +64,6 @@ export default function VisionPage() {
           </p>
         </RevealOnScroll>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,268 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Laterite & Ink palette */
-  --color-ink: #0E0B09;
-  --color-ink-soft: #1A1613;
-  --color-laterite: #A6402A;
-  --color-laterite-deep: #6E2A1C;
-  --color-paper: #F3EAE0;
-  --color-ash: #8C8178;
-
-  /* Typography */
-  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
-  --font-wordmark: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-inter: 'Inter', sans-serif;
 }
 
-@layer base {
-  body {
-    background-color: var(--color-ink);
-    color: var(--color-paper);
-    font-family: var(--font-sans);
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-::selection {
-  background-color: var(--color-laterite);
-  color: var(--color-paper);
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #000000;
+  overflow-x: hidden;
+  color: white;
 }
 
-/* ─── Film grain overlay ─── */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  animation: grain 0.8s steps(1) infinite;
+/* ─── Custom Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
+/* ─── Octagonal Clip-Path Buttons ─── */
+
+.btn-cut {
+  clip-path: polygon(
+    12px 0%, calc(100% - 12px) 0%, 100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%, 0% calc(100% - 12px), 0% 12px
+  );
 }
 
-/* ─── Offering cards ─── */
-.offering-card {
+.btn-cut-border {
   position: relative;
-  padding: 1.5rem;
-  border: 1px solid rgba(140, 129, 120, 0.08);
-  border-radius: 0.5rem;
-  background: rgba(26, 22, 19, 0.4);
-  backdrop-filter: blur(8px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: white;
+  clip-path: polygon(
+    12px 0%, calc(100% - 12px) 0%, 100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%, 0% calc(100% - 12px), 0% 12px
+  );
 }
-
-.offering-card::before {
+.btn-cut-border::before {
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: 0.5rem;
-  padding: 1px;
-  background: linear-gradient(135deg, transparent 40%, var(--color-laterite) 100%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  inset: 1px;
+  background: black;
+  clip-path: polygon(
+    11px 0%, calc(100% - 11px) 0%, 100% 11px, 100% calc(100% - 11px),
+    calc(100% - 11px) 100%, 11px 100%, 0% calc(100% - 11px), 0% 11px
+  );
+  z-index: 0;
+}
+.btn-cut-border > * {
+  position: relative;
+  z-index: 1;
 }
 
-.offering-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(166, 64, 42, 0.15);
-  background: rgba(26, 22, 19, 0.6);
-  box-shadow: 0 8px 32px rgba(166, 64, 42, 0.06);
+.btn-cut-sm {
+  clip-path: polygon(
+    8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px),
+    calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px
+  );
 }
 
-.offering-card:hover::before {
-  opacity: 1;
+/* ─── Glass Card ─── */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 80px rgba(255, 255, 255, 0.02);
 }
 
-/* ─── Ambient gradient orb ─── */
-@keyframes ambient-drift {
-  0%, 100% {
-    transform: translate(0%, 0%) scale(1);
-    opacity: 0.15;
-  }
-  25% {
-    transform: translate(5%, -8%) scale(1.05);
-    opacity: 0.2;
-  }
-  50% {
-    transform: translate(-3%, 5%) scale(0.95);
-    opacity: 0.12;
-  }
-  75% {
-    transform: translate(-5%, -3%) scale(1.02);
-    opacity: 0.18;
-  }
+/* ─── Gradient Elements ─── */
+
+.gradient-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.05) 80%, transparent);
 }
+
+.gradient-line-animated {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.05) 80%, transparent);
+  transform-origin: left;
+}
+
+/* ─── Ambient Orbs ─── */
 
 .ambient-orb {
   position: absolute;
-  width: 60vw;
-  height: 60vw;
-  max-width: 700px;
-  max-height: 700px;
+  width: 500px;
+  height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--color-laterite-deep) 0%, transparent 70%);
-  filter: blur(100px);
-  animation: ambient-drift 12s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  animation: float 25s ease-in-out infinite;
+}
+
+/* ─── Keyframe Animations ─── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33%      { transform: translateY(-20px) rotate(1deg); }
+  66%      { transform: translateY(10px) rotate(-1deg); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: translateY(0); }
+  50%      { opacity: 0.4; transform: translateY(8px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.anim-stagger {
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-fade {
+  opacity: 0;
+  animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-scroll-pulse {
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+/* ─── Section Number Label ─── */
+
+.section-number {
+  font-size: clamp(8rem, 15vw, 14rem);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.015);
+  line-height: 1;
+  user-select: none;
   pointer-events: none;
 }
-
-/* ─── Animated mesh gradient (hero background) ─── */
-.mesh-gradient {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.mesh-gradient::before,
-.mesh-gradient::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  animation: mesh-move 20s ease-in-out infinite;
-}
-
-.mesh-gradient::before {
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(166, 64, 42, 0.2) 0%, transparent 70%);
-  top: -20%;
-  right: -10%;
-  animation-delay: 0s;
-}
-
-.mesh-gradient::after {
-  width: 40vw;
-  height: 40vw;
-  background: radial-gradient(circle, rgba(110, 42, 28, 0.15) 0%, transparent 70%);
-  bottom: 10%;
-  left: -5%;
-  animation-delay: -10s;
-}
-
-@keyframes mesh-move {
-  0%, 100% { transform: translate(0%, 0%) rotate(0deg); }
-  25% { transform: translate(8%, -12%) rotate(5deg); }
-  50% { transform: translate(-5%, 8%) rotate(-3deg); }
-  75% { transform: translate(-8%, -5%) rotate(4deg); }
-}
-
-/* ─── Gradient text for headings ─── */
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-paper) 0%, var(--color-laterite) 50%, var(--color-paper) 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 8s ease-in-out infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* ─── Shimmer line on offering cards ─── */
-.offering-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(166, 64, 42, 0.03), transparent);
-  transition: left 0.6s ease;
-  border-radius: 0.5rem;
-}
-
-.offering-card:hover::after {
-  left: 100%;
-}
-
-/* ─── Magnetic button ─── */
-.magnetic-btn {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.magnetic-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(166, 64, 42, 0.1) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.magnetic-btn:hover::before {
-  opacity: 1;
-}
-
-.magnetic-btn:hover {
-  border-color: rgba(166, 64, 42, 0.4);
-  box-shadow: 0 0 30px rgba(166, 64, 42, 0.12), 0 0 60px rgba(166, 64, 42, 0.04);
-  transform: translateY(-1px);
-}
-
-/* ─── Section heading accent ─── */
-.section-heading {
-  position: relative;
-  display: inline-block;
-}
-
-.section-heading::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 40px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-laterite), transparent);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.section-heading:hover::after {
-  width: 80px;
-}
-
-/* Reduced motion: disable transforms and parallax, preserve opacity fades */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-  }
-  .grain-overlay,
-  .ambient-orb,
-  .mesh-gradient::before,
-  .mesh-gradient::after {
-    animation: none;
-  }
-  .ambient-orb {
-    opacity: 0.15;
-  }
-  .gradient-text {
-    animation: none;
-    background-position: 0% 50%;
-  }
-  /* Keep opacity transitions functional for graceful fades */
-}
-

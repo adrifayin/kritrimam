@@ -1,31 +1,77 @@
-import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { AnimatedDivider } from "@/components/AnimatedDivider";
+"use client";
+
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
 
 export function VisionSection() {
-  return (
-    <section id="vision" className="relative pt-32 md:pt-40 pb-32 md:pb-48">
-      {/* Animated divider */}
-      <AnimatedDivider />
+  const sectionRef = useRef<HTMLElement>(null);
+  const quoteRef = useRef<HTMLQuoteElement>(null);
 
-      <div className="max-w-3xl mx-auto px-6 md:px-12 pt-24 md:pt-32">
-        {/* H2 */}
-        <RevealOnScroll>
-          <h2 className="font-display font-bold text-5xl md:text-6xl text-paper mb-16">
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const numberY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+
+  // Pull-quote line height animation
+  const { scrollYProgress: quoteProgress } = useScroll({
+    target: quoteRef,
+    offset: ["start 85%", "start 40%"],
+  });
+  const lineHeight = useTransform(quoteProgress, [0, 1], ["0%", "100%"]);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="vision"
+      className="relative py-32 md:py-48 overflow-hidden"
+    >
+      {/* Ambient orb */}
+      <div
+        className="ambient-orb"
+        style={{ bottom: "10%", right: "-10%", opacity: 0.35 }}
+      />
+
+      {/* Animated divider */}
+      <motion.div
+        className="gradient-line-animated mx-6 md:mx-12"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      />
+
+      {/* Background number */}
+      <motion.span
+        className="section-number absolute -right-4 top-16"
+        style={{ y: numberY }}
+      >
+        03
+      </motion.span>
+
+      <div className="max-w-3xl mx-auto px-6 md:px-12 pt-24 md:pt-32 relative">
+        {/* Heading */}
+        <Reveal>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-16 tracking-[-0.03em]">
             Vision
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
-        <RevealOnScroll delay={0.05}>
-          <p className="text-paper/80 text-lg leading-relaxed mb-12">
+        {/* Paragraph 1 */}
+        <Reveal delay={0.05}>
+          <p className="text-white/60 text-lg leading-[1.9] mb-12 font-light">
             Kritrimam isn&apos;t set up to ship one product and call it a
             company. NEST.ai and Budhi are what we&apos;ve built with what we
             know so far — proof of work, not the whole point. The point is the
             lab underneath both of them.
           </p>
-        </RevealOnScroll>
+        </Reveal>
 
-        <RevealOnScroll>
-          <p className="text-paper/80 text-lg leading-relaxed mb-12">
+        {/* Paragraph 2 */}
+        <Reveal>
+          <p className="text-white/60 text-lg leading-[1.9] mb-12 font-light">
             Most AI products fail quietly, in the gap between what a system
             actually knows and what it confidently says. We care about that gap
             more than almost anything else — about where an answer comes from,
@@ -34,26 +80,25 @@ export function VisionSection() {
             what we mean by data clarity: not more data, clearer footing under
             it.
           </p>
-        </RevealOnScroll>
+        </Reveal>
 
-        {/* Pull-quote — enhanced with gradient accent */}
-        <RevealOnScroll>
-          <blockquote className="relative my-16 md:my-20 pl-8">
-            {/* Gradient accent line */}
-            <div
-              className="absolute left-0 top-0 bottom-0 w-[2px]"
-              style={{
-                background: "linear-gradient(to bottom, var(--color-laterite), var(--color-laterite-deep), transparent)",
-              }}
+        {/* Pull-quote with animated gradient line */}
+        <Reveal>
+          <blockquote ref={quoteRef} className="relative my-20 md:my-28 pl-8 md:pl-10">
+            {/* Animated gradient accent line */}
+            <motion.div
+              className="absolute left-0 top-0 w-[2px] bg-gradient-to-b from-white/40 via-white/15 to-transparent"
+              style={{ height: lineHeight }}
             />
-            <p className="font-display text-3xl md:text-4xl text-paper leading-snug">
+            <p className="text-3xl md:text-4xl lg:text-5xl text-white font-light leading-[1.2] tracking-[-0.02em]">
               Not more data, clearer footing under it.
             </p>
           </blockquote>
-        </RevealOnScroll>
+        </Reveal>
 
-        <RevealOnScroll>
-          <p className="text-paper/80 text-lg leading-relaxed">
+        {/* Closing paragraph */}
+        <Reveal>
+          <p className="text-white/60 text-lg leading-[1.9] font-light">
             We&apos;re building toward the kind of research work usually
             reserved for a handful of labs in the world. That&apos;s a long way
             from where we are today — a small team in Kerala, self-funded,
@@ -62,7 +107,7 @@ export function VisionSection() {
             to understand something, is built for that horizon, not for a quick
             exit.
           </p>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </section>
   );

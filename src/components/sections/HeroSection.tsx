@@ -1,124 +1,118 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
 export function HeroSection() {
-  const reducedMotion = useReducedMotion();
-  const rise = reducedMotion ? 0 : 24;
-  const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
 
-  // Scroll cue: fade out after scrolling past ~15% of viewport
-  const [showScrollCue, setShowScrollCue] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const threshold = window.innerHeight * 0.15;
-      setShowScrollCue(window.scrollY < threshold);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Scroll-linked transforms for vanishing effect
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.55], [0, -100]);
+  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.8], [0.25, 0.7]);
 
   return (
     <section
+      ref={ref}
       id="hero"
-      className="relative min-h-screen flex flex-col justify-end overflow-hidden"
+      className="relative h-screen overflow-hidden"
     >
-      {/* Background video — only rendered when motion is allowed */}
-      {!reducedMotion && (
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/hero-poster.jpg"
-          className="absolute inset-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero.webm" type="video/webm" />
-          <source src="/hero.mp4" type="video/mp4" />
-        </video>
-      )}
-
-      {/* Gradient overlay for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent opacity-80 -z-10" />
-
-      {/* Reduced motion: poster image fallback (no video at all) */}
-      {reducedMotion && (
-        <div
-          className="absolute inset-0 -z-10 bg-ink bg-cover bg-center"
-          style={{ backgroundImage: "url(/hero-poster.jpg)" }}
-        />
-      )}
-
-      {/* Ambient laterite gradient orb — slow-drifting glow */}
-      <div
-        className="ambient-orb -z-[5]"
-        style={{ bottom: "10%", right: "-10%", opacity: 0.12 }}
+      {/* Background video with parallax zoom */}
+      <motion.video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ scale: videoScale }}
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260717_120352_eb988725-1351-43b3-8095-16e4a1005e3d.mp4"
       />
 
-      {/* Hero content — lower-left third */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pb-24 md:pb-32 w-full">
-        {/* Big wordmark */}
-        <motion.h1
-          className="font-bold text-paper leading-[0.95] mb-6 tracking-[-0.03em]"
-          style={{ fontSize: "clamp(3.5rem, 9vw, 9rem)", fontFamily: "var(--font-wordmark)" }}
-          initial={{ opacity: 0, y: rise }}
+      {/* Dynamic dark overlay that deepens on scroll */}
+      <motion.div
+        className="absolute inset-0 bg-black"
+        style={{ opacity: overlayOpacity }}
+      />
+
+      {/* Subtle grain texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Content that vanishes on scroll */}
+      <motion.div
+        className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6"
+        style={{ opacity: contentOpacity, y: contentY }}
+      >
+        {/* Small eyebrow */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.7, ease }}
+          transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-white/30 text-xs tracking-[0.3em] uppercase mb-8 font-light"
         >
-          kritrimam
+          Kritrimam Research Lab
+        </motion.p>
+
+        {/* Main tagline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light leading-[0.95] tracking-[-0.04em] max-w-5xl"
+        >
+          Where{" "}
+          <em className="not-italic text-white/45">dreams</em> rise{" "}
+          <br className="hidden sm:block" />
+          <em className="not-italic text-white/45">through the silence.</em>
         </motion.h1>
 
-        {/* One-liner */}
+        {/* Subtitle */}
         <motion.p
-          className="font-sans text-ash text-lg md:text-xl max-w-xl leading-relaxed mb-4"
-          initial={{ opacity: 0, y: rise }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.7, ease }}
+          transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 max-w-2xl text-base sm:text-lg leading-relaxed text-white/50 font-light"
         >
-          Kritrimam means artificial. We&apos;re here to make it deliberate.
+          We&apos;re designing tools for deep thinkers, bold creators, and quiet
+          rebels. Amid the chaos, we build digital spaces for sharp focus and
+          inspired work.
         </motion.p>
 
-        {/* Small descriptor — opacity only, no vertical travel */}
-        <motion.p
-          className="font-mono text-xs tracking-[0.08em] uppercase text-ash/60"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.6, ease }}
+        {/* CTA button */}
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-12 px-14 py-5 bg-white flex items-center gap-2 text-black hover:bg-white/90 transition-colors group btn-cut cursor-pointer"
         >
-          An independent AI research lab.
-        </motion.p>
-      </div>
+          <span className="text-sm font-medium">Begin Journey</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
+      </motion.div>
 
-      {/* Scroll cue */}
+      {/* Scroll indicator — vanishes with content */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        animate={{ opacity: showScrollCue ? 0.5 : 0 }}
-        transition={{ duration: 0.4 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10"
+        style={{ opacity: contentOpacity }}
       >
-        <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-ash">
+        <span className="text-white/25 text-[10px] tracking-[0.3em] uppercase font-light">
           Scroll
         </span>
-        <motion.svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          className="text-ash"
-          animate={{ y: [0, 4, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <path
-            d="M8 3v10M4 9l4 4 4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </motion.svg>
+        <ChevronDown className="w-4 h-4 text-white/25 anim-scroll-pulse" />
       </motion.div>
+
+      {/* Bottom gradient fade into black sections below */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-[5] pointer-events-none" />
     </section>
   );
 }

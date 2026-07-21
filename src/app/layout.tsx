@@ -1,42 +1,10 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono, Syne } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
-import { SmoothScroll } from "@/components/SmoothScroll";
-import { ScrollProgress } from "@/components/ScrollProgress";
-import { MouseGlow } from "@/components/MouseGlow";
-import { FloatingParticles } from "@/components/FloatingParticles";
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-});
-
-const ibmPlexSans = IBM_Plex_Sans({
-  weight: ["400", "500"],
-  subsets: ["latin"],
-  variable: "--font-ibm-plex-sans",
-  display: "swap",
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-ibm-plex-mono",
-  display: "swap",
-});
-
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
-  title: "Kritrimam — An Independent AI Research Lab",
+  title: "Kritrimam",
   description:
-    "Kritrimam means artificial. We're here to make it deliberate. An independent AI research lab building from Kerala.",
+    "Kritrimam — an AI research lab forging the future of intelligent systems. NEST.ai · Budhi.",
 };
 
 export default function RootLayout({
@@ -45,20 +13,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} ${syne.variable} antialiased`}
-    >
-      <body className="min-h-screen flex flex-col font-sans bg-ink text-paper">
-        {/* Ambient visual layers */}
-        <div className="grain-overlay" aria-hidden="true" />
-        <MouseGlow />
-        <FloatingParticles />
-        <SmoothScroll>
-          <ScrollProgress />
-          <Navigation />
-          <main className="flex-1 w-full relative z-10">{children}</main>
-        </SmoothScroll>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-inter bg-black">
+        {children}
       </body>
     </html>
   );

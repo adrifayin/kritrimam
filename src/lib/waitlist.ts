@@ -52,8 +52,10 @@ export const branchSchemas = {
 export const submitSchema = z.object({
   email,
   interest: z.enum(INTERESTS),
-  // Honeypot: real users never fill this. Must be empty.
-  website: z.string().max(0).optional().or(z.literal("")),
+  // Honeypot: real users never fill this. Deliberately accepts any string so
+  // the route handler can decide what to do with a filled one — rejecting it
+  // here would return a validation error and tell the bot it was caught.
+  website: z.string().optional(),
   fields: z.record(z.string(), z.string()).optional(),
 });
 

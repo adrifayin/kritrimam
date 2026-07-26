@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { submitSchema } from "@/lib/waitlist";
+import { deliverSignup } from "@/lib/waitlist-store";
 
 /**
  * In-memory IP rate limiter. Per-instance only (resets on cold start), which
@@ -53,12 +54,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // TODO(production): persist to a store / email provider (e.g. Resend, KV).
-  // For now we accept and log server-side only.
-  console.info("[waitlist] signup", {
-    email: parsed.data.email,
-    interest: parsed.data.interest,
+  const result = await deliverSignup(parsed.data, {
+    submittedAt: new Date().toISOString(),
+    userAgent: req.headers.get("user-agent") ?? undefined,
   });
+
+  // A configured provider that failed means the signup is lost — say so rather
+  // than returning ok and dropping it silently. Provider errors stay server-side.
+  if (result.configured && !result.delivered) {
+    console.error("[waitlist] delivery failed", result.errors);
+    return NextResponse.json(
+      { ok: false, error: "We couldn't save that just now. Please try again." },
+      { status: 502 },
+    );
+  }
+
+  // Partial failure: one transport landed, another didn't. The signup is safe,
+  // so the visitor still gets a success — but flag it for the logs.
+  if (result.errors.length > 0) {
+    console.warn("[waitlist] partial delivery", result.errors);
+  }
 
   return NextResponse.json({ ok: true });
 }

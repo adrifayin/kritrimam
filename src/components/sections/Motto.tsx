@@ -10,10 +10,13 @@ export function Motto() {
       aria-label="Kritrimam motto"
       className="relative flex min-h-[90dvh] w-full items-center justify-center overflow-hidden bg-ink"
     >
-      {/* Ambient flowing video (poster-less; hidden under reduced motion) */}
+      {/* Ambient flowing video. Under reduced motion / Save-Data this falls
+          back to the still poster, keeping the texture without the movement. */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <AdaptiveVideo
-          desktopSrc={site.media.flowVideo}
+          desktopSrc={site.media.flowVideoDesktop}
+          mobileSrc={site.media.flowVideoMobile}
+          poster={site.media.flowPoster}
           className="size-full object-cover opacity-[0.22] mix-blend-screen"
         />
       </div>

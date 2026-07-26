@@ -329,10 +329,14 @@ export const site = {
   },
 
   media: {
-    heroVideoDesktop: "/video/ascii-hands.mp4",
-    heroVideoMobile: "/video/ascii-hands.mp4",
-    heroPoster: "/img/ascii-hands.jpg",
-    flowVideo: "/video/flow.mp4",
+    // All cuts are H.264 (baseline-compatible profiles), audio stripped, and
+    // written with +faststart so playback can begin before the full download.
+    heroVideoDesktop: "/video/hero-desktop.mp4",
+    heroVideoMobile: "/video/hero-mobile.mp4",
+    heroPoster: "/img/hero-poster.jpg",
+    flowVideoDesktop: "/video/flow-desktop.mp4",
+    flowVideoMobile: "/video/flow-mobile.mp4",
+    flowPoster: "/img/flow-poster.jpg",
   },
 
   images: {

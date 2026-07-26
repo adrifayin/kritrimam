@@ -2,8 +2,14 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useDragControls,
+  useReducedMotion,
+} from "motion/react";
 import { cn } from "@/lib/utils";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 type Props = {
   open: boolean;
@@ -21,6 +27,7 @@ export function Modal({ open, onClose, labelledBy, children, className }: Props)
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const reduce = useReducedMotion();
+  const dragControls = useDragControls();
 
   // Keyboard: Escape closes, Tab is trapped within the panel.
   const onKeyDown = useCallback(
@@ -48,17 +55,12 @@ export function Modal({ open, onClose, labelledBy, children, className }: Props)
     [onClose],
   );
 
+  useScrollLock(open);
+
   useEffect(() => {
     if (!open) return;
 
     previouslyFocused.current = document.activeElement as HTMLElement | null;
-
-    // Scroll lock + scrollbar compensation.
-    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
-    const prevOverflow = document.body.style.overflow;
-    const prevPad = document.body.style.paddingRight;
-    document.body.style.overflow = "hidden";
-    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
 
     document.addEventListener("keydown", onKeyDown);
 
@@ -71,8 +73,6 @@ export function Modal({ open, onClose, labelledBy, children, className }: Props)
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPad;
       window.clearTimeout(t);
       previouslyFocused.current?.focus?.();
     };
@@ -111,14 +111,28 @@ export function Modal({ open, onClose, labelledBy, children, className }: Props)
               duration: reduce ? 0.01 : 0.42,
               ease: [0.22, 1, 0.36, 1],
             }}
+            /* Swipe-to-dismiss, driven only from the handle below so the
+               gesture never competes with scrolling the sheet's content. */
+            drag="y"
+            dragListener={false}
+            dragControls={dragControls}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 120 || info.velocity.y > 600) onClose();
+            }}
             className={cn(
-              "relative z-10 flex max-h-[92dvh] w-full flex-col overflow-y-auto border border-ink-line bg-ink-raised",
+              "relative z-10 flex max-h-[92dvh] w-full flex-col overflow-y-auto overscroll-contain border border-ink-line bg-ink-raised",
               "rounded-t-2xl pb-[max(1.5rem,env(safe-area-inset-bottom))] md:w-[560px] md:max-w-[90vw] md:rounded-2xl",
               className,
             )}
           >
-            {/* Mobile drag handle */}
-            <div className="flex justify-center pt-3 md:hidden">
+            {/* Mobile drag handle — the grab target for swipe-to-dismiss.
+                `touch-none` keeps the browser from claiming the gesture. */}
+            <div
+              onPointerDown={(e) => dragControls.start(e)}
+              className="flex shrink-0 cursor-grab touch-none justify-center py-3 active:cursor-grabbing md:hidden"
+            >
               <span className="h-1 w-10 rounded-full bg-ink-line" />
             </div>
             {children}

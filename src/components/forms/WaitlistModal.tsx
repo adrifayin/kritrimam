@@ -223,15 +223,29 @@ export function WaitlistModal({
                   )}
                 </fieldset>
                 <Field label="Subject or field" error={errors.subject?.message} {...register("subject")} />
-                <Field label="Institution (optional)" {...register("institution")} />
+                <Field
+                  label="Institution (optional)"
+                  autoComplete="organization"
+                  {...register("institution")}
+                />
               </>
             )}
 
             {interest === "budhi" && (
               <>
-                <Field label="Name" error={errors.name?.message} {...register("name")} />
-                <Field label="Company" error={errors.company?.message} {...register("company")} />
-                <Field label="Role" error={errors.jobRole?.message} {...register("jobRole")} />
+                <Field label="Name" autoComplete="name" error={errors.name?.message} {...register("name")} />
+                <Field
+                  label="Company"
+                  autoComplete="organization"
+                  error={errors.company?.message}
+                  {...register("company")}
+                />
+                <Field
+                  label="Role"
+                  autoComplete="organization-title"
+                  error={errors.jobRole?.message}
+                  {...register("jobRole")}
+                />
                 <Field
                   label="What are you trying to solve?"
                   multiline
@@ -260,15 +274,20 @@ export function WaitlistModal({
 
             {interest === "research" && (
               <>
-                <Field label="Name" error={errors.name?.message} {...register("name")} />
-                <Field label="Affiliation" error={errors.affiliation?.message} {...register("affiliation")} />
+                <Field label="Name" autoComplete="name" error={errors.name?.message} {...register("name")} />
+                <Field
+                  label="Affiliation"
+                  autoComplete="organization"
+                  error={errors.affiliation?.message}
+                  {...register("affiliation")}
+                />
                 <Field label="Area of interest" error={errors.area?.message} {...register("area")} />
               </>
             )}
 
             {interest === "other" && (
               <>
-                <Field label="Name" error={errors.name?.message} {...register("name")} />
+                <Field label="Name" autoComplete="name" error={errors.name?.message} {...register("name")} />
                 <Field
                   label="Message"
                   multiline

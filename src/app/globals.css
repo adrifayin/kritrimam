@@ -128,12 +128,15 @@
    Utilities / component-level helpers
    ============================================================ */
 @layer components {
-  /* Content container */
+  /* Content container. Each side takes its own inset — a notched phone in
+     landscape has an inset on one edge only, so a single shared value would
+     either clip that edge or over-pad the other. */
   .container-content {
     width: 100%;
     max-width: var(--max-content);
     margin-inline: auto;
-    padding-inline: max(var(--gutter), env(safe-area-inset-left));
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
   }
 
   /* Prose measure cap */

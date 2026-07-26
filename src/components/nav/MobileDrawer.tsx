@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -47,18 +48,17 @@ export function MobileDrawer({
     [onClose],
   );
 
+  useScrollLock(open);
+
   useEffect(() => {
     if (!open) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", onKeyDown);
     const t = window.setTimeout(() => {
       panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
     }, 0);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = prevOverflow;
       window.clearTimeout(t);
       // Return focus to the hamburger (the trigger).
       previouslyFocused?.focus?.();
@@ -77,7 +77,7 @@ export function MobileDrawer({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0.01 : 0.25 }}
         >
-          <div className="flex-1 overflow-y-auto px-[max(1.25rem,env(safe-area-inset-left))] pt-24 pb-8">
+          <div className="flex-1 overflow-y-auto overscroll-contain pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pt-24 pb-8">
             <ul className="flex flex-col">
               {nav.items.map((item, i) => {
                 const hasPanel = !!item.panel;
@@ -96,7 +96,7 @@ export function MobileDrawer({
                           type="button"
                           aria-expanded={isOpen}
                           onClick={() => setExpanded(isOpen ? null : i)}
-                          className="flex w-full items-center justify-between py-5 text-left"
+                          className="flex w-full touch-manipulation select-none items-center justify-between py-5 text-left transition-opacity active:opacity-60"
                         >
                           <span className="font-display text-h3 text-bone">
                             {item.label}
@@ -122,7 +122,7 @@ export function MobileDrawer({
                                   <a
                                     href={link.href}
                                     onClick={onClose}
-                                    className="flex flex-col gap-0.5 py-3 pl-1"
+                                    className="flex touch-manipulation flex-col gap-0.5 py-3 pl-1 transition-opacity active:opacity-60"
                                   >
                                     <span className="text-body text-bone-dim">{link.label}</span>
                                     <span className="text-small text-text-muted">{link.desc}</span>
@@ -137,7 +137,7 @@ export function MobileDrawer({
                       <a
                         href={item.href}
                         onClick={onClose}
-                        className="flex py-5 font-display text-h3 text-bone"
+                        className="flex touch-manipulation select-none py-5 font-display text-h3 text-bone transition-opacity active:opacity-60"
                       >
                         {item.label}
                       </a>
@@ -149,7 +149,7 @@ export function MobileDrawer({
           </div>
 
           {/* CTA pinned above safe-area inset */}
-          <div className="border-t border-ink-line px-[max(1.25rem,env(safe-area-inset-left))] pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
+          <div className="border-t border-ink-line pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
             <Button href="#contact" size="lg" className="w-full" onClick={onClose}>
               {nav.cta}
             </Button>

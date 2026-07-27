@@ -8,7 +8,6 @@ import {
 import "./globals.css";
 import { site } from "@/content/site";
 import { WaitlistProvider } from "@/components/forms/WaitlistProvider";
-import { Cursor } from "@/components/motion/Cursor";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -98,7 +97,6 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Cursor />
         <WaitlistProvider>{children}</WaitlistProvider>
         <script
           type="application/ld+json"

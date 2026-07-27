@@ -60,8 +60,15 @@ export function HeroContent() {
         </span>
       </h1>
 
-      {/* Grounding thread instance #1 — draws at ~1.1s */}
-      <GroundingThread chip={hero.threadChip} delay={reduce ? 0 : 1.1} className="mt-6" />
+      {/* Grounding thread instance #1 — draws at ~1.1s. Desktop-only: below
+          900px there isn't room between the headline and the lede for the
+          thread to sit without crowding one of them. */}
+      <GroundingThread
+        chip={hero.threadChip}
+        delay={reduce ? 0 : 1.1}
+        className="mt-6"
+        desktopOnly
+      />
 
       <motion.p className="prose-measure mt-8 text-lede text-bone-dim" {...fade(0.62)}>
         <Runs runs={hero.lede} />

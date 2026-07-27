@@ -19,10 +19,19 @@ export function GroundingThread({
   chip,
   delay = 0,
   className,
+  desktopOnly = false,
 }: {
   chip: string;
   delay?: number;
   className?: string;
+  /**
+   * Drop the thread entirely below 900px instead of falling back to the
+   * vertical variant. The hero needs this: its lede sits directly beneath the
+   * thread, and the stacked variant is tall enough to reflow onto that text on
+   * a narrow viewport. Where a thread has room to breathe (the NEST.ai step
+   * grid) the vertical fallback is still the better answer, so this is opt-in.
+   */
+  desktopOnly?: boolean;
 }) {
   const reduce = useReducedMotion();
 
@@ -40,9 +49,23 @@ export function GroundingThread({
   };
 
   return (
-    <div className={cn("select-none", className)}>
-      {/* Diagonal (≥768px) */}
-      <div className="relative hidden h-[76px] w-[220px] md:block">
+    <div
+      className={cn(
+        // z-10 keeps the chip above neighbouring prose no matter how the
+        // surrounding flow settles; it should never need to win, but a chip
+        // that loses this fight is unreadable rather than merely misplaced.
+        "relative z-10 select-none",
+        desktopOnly ? "hidden min-[900px]:block" : "block",
+        className,
+      )}
+    >
+      {/* Diagonal (≥768px, or ≥900px when desktopOnly) */}
+      <div
+        className={cn(
+          "relative h-[76px] w-[220px]",
+          desktopOnly ? "block" : "hidden md:block",
+        )}
+      >
         <svg
           viewBox="0 0 220 76"
           fill="none"
@@ -51,7 +74,7 @@ export function GroundingThread({
         >
           <circle cx="3" cy="6" r="2.5" fill={BRASS} />
           <motion.path
-            d="M3 6 C 70 6, 78 58, 150 64"
+            d="M3 6 C 68 6, 76 42, 148 46"
             stroke={BRASS}
             strokeWidth="1"
             strokeLinecap="round"
@@ -59,13 +82,27 @@ export function GroundingThread({
             {...pathAnim}
           />
         </svg>
-        <motion.div className="absolute left-[150px] top-[52px]" {...chipAnim}>
+        {/*
+          The chip hangs off the end of the curve at (148,46), centred on it
+          rather than dropped from it — the old top-[52px] corner anchor pushed
+          the chip to y≈86 in a 76px box, so it cleared the box by more than the
+          following margin and landed on the lede. `flex w-max` is load-bearing:
+          as a plain block the wrapper inherits the body's 1.65 line-height and
+          grows a strut far taller than the chip, and as a bare flex box it
+          shrinks the chip to the ~66px left inside the 220px track and wraps
+          the label. Together they make the wrapper hug the chip exactly, so
+          the measured box is the box you see.
+        */}
+        <motion.div
+          className="absolute left-[154px] top-[46px] flex w-max -translate-y-1/2"
+          {...chipAnim}
+        >
           <SourceChip>{chip}</SourceChip>
         </motion.div>
       </div>
 
-      {/* Vertical (<768px) */}
-      <div className="flex flex-col items-start md:hidden">
+      {/* Vertical (<768px) — not rendered at all when desktopOnly */}
+      <div className={cn("flex flex-col items-start md:hidden", desktopOnly && "hidden")}>
         <svg
           viewBox="0 0 8 44"
           fill="none"

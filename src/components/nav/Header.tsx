@@ -58,7 +58,9 @@ export function Header() {
         >
           <Wordmark />
 
-          <MegaMenu />
+          <nav aria-label="Main navigation">
+            <MegaMenu />
+          </nav>
 
           <div className="flex items-center gap-3">
             <Button href="#contact" size="sm" className="hidden lg:inline-flex">
@@ -75,7 +77,7 @@ export function Header() {
               className="relative flex size-11 flex-col items-center justify-center gap-1.5 lg:hidden"
             >
               <motion.span
-                animate={drawerOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
+                animate={drawerOpen ? { rotate: 45, y: 3.5 } : { rotate: 0, y: 0 }}
                 transition={{ duration: reduce ? 0.01 : 0.2 }}
                 className="block h-px w-6 bg-bone"
               />
@@ -85,7 +87,7 @@ export function Header() {
                 className="block h-px w-6 bg-bone"
               />
               <motion.span
-                animate={drawerOpen ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }}
+                animate={drawerOpen ? { rotate: -45, y: -3.5 } : { rotate: 0, y: 0 }}
                 transition={{ duration: reduce ? 0.01 : 0.2 }}
                 className="block h-px w-6 bg-bone"
               />

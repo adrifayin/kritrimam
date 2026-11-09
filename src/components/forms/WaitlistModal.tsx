@@ -37,7 +37,7 @@ const branchKeys: Record<Interest, (keyof FormValues)[]> = {
   other: ["name", "message"],
 };
 
-const TOTAL = 3;
+const TOTAL = 2;
 
 export function WaitlistModal({
   open,

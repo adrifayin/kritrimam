@@ -281,6 +281,27 @@ export const site = {
     teamSizes: ["1–10", "11–50", "51–200", "200+"],
   },
 
+  clients: {
+    marker: "04",
+    h2: "Clients",
+    sub: "Who we've built for, beyond our own products.",
+    items: [
+      {
+        name: "Bright Blue",
+        meta: "FMCG · Kochi, Kerala",
+        work: "Storefront and admin for eight household and personal-care brands — catalogue, variants, offers, inventory and enquiries, with Razorpay checkout.",
+        href: "https://brightbluefmcg.com/",
+        linkLabel: "brightbluefmcg.com",
+      },
+    ],
+    open: {
+      meta: "Next",
+      line: "Your team could be here.",
+      href: "#contact",
+      linkLabel: "Get in touch",
+    },
+  },
+
   contact: {
     h2: "Contact",
     sub: "If you're building something and think we could help, get in touch.",
@@ -300,6 +321,7 @@ export const site = {
         links: [
           { label: "Vision", href: "#vision" },
           { label: "Research", href: "#vision" },
+          { label: "Clients", href: "#clients" },
           { label: "Contact", href: "#contact" },
         ],
       },

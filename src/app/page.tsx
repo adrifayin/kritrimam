@@ -8,6 +8,7 @@ import { Budhi } from "@/components/sections/Budhi";
 import { Vision } from "@/components/sections/Vision";
 import { Motto } from "@/components/sections/Motto";
 import { Waitlist } from "@/components/sections/Waitlist";
+import { Clients } from "@/components/sections/Clients";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { Divider } from "@/components/ui/Divider";
@@ -36,6 +37,8 @@ export default function Home() {
         <Vision />
         <Motto />
         <Waitlist />
+        <SectionDivider />
+        <Clients />
         <SectionDivider />
         <Contact />
       </main>
